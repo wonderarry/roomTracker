@@ -8,6 +8,9 @@ const PageFooter = () => {
         justifyContent: 'space-between',
         flexDirection: 'row',
         width: '100%',
+        fontFamily: "Inter",
+        fontWeight: '400',
+        fontSize: "12px"
     }
     const locale = 'ru';
     const [today, setDate] = React.useState(new Date());

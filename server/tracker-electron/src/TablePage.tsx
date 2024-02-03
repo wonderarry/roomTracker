@@ -1,8 +1,7 @@
-import { useState } from 'react';
 import AdStrip from './components/AdStrip';
 import FloatingItem from './components/FloatingItem';
 import PageFooter from './components/PageFooter';
-
+import { StatusCode } from './common/enums';
 
 
 
@@ -33,9 +32,9 @@ const TablePage = () => {
         marginBottom: '12px'
     }
 
-    const roomNumbers = import.meta.env.VITE_ROOM_NUMBERS;
-    const specialistNames = import.meta.env.VITE_SPECIALIST_NAMES;
-    const servicesPerformed = import.meta.env.VITE_SERVICES_PERFORMED;
+    // const roomNumbers = import.meta.env.VITE_ROOM_NUMBERS;
+    // const specialistNames = import.meta.env.VITE_SPECIALIST_NAMES;
+    // const servicesPerformed = import.meta.env.VITE_SERVICES_PERFORMED;
 
 
     
@@ -54,7 +53,7 @@ const TablePage = () => {
                     roomName='123'
                     specialistName='Пантикова И.Н.'
                     serviceName='ЭКГ ФВД ХМ-ЭКГ СМАД'
-                    statusCode={2}
+                    statusCode={StatusCode.Available}
                 />
             </div>
 

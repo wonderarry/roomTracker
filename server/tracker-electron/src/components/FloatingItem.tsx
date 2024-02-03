@@ -1,10 +1,11 @@
 import React, { ReactNode } from 'react';
+import { StatusCode } from '../common/enums';
 
 interface FloatingItemProps {
     roomName: string;
     specialistName: string;
     serviceName: string;
-    statusCode: number;
+    statusCode: StatusCode;
 }
 
 interface TextItemProps {
@@ -40,9 +41,9 @@ const FloatingItem: React.FC<FloatingItemProps> = ({ roomName, specialistName, s
         padding: '16px',
         width: '96%',
         margin: 'auto',
-        backgroundColor: '#ffe0e0',
+        backgroundColor: '#dddddd',
         borderRadius: '12px',
-        boxShadow: '2px 2px 6px 1px rgba(0, 0, 0, 0.1)',
+        boxShadow: '2px 2px 6px 1px rgba(0, 0, 0, 0.2)',
         textAlign: 'center'
     }
     return (
