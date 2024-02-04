@@ -12,6 +12,13 @@ interface TextItemProps {
     children: ReactNode;
 }
 
+const StatusColors = new Map();
+StatusColors.set(StatusCode.Inactive, '#dddddd')
+StatusColors.set(StatusCode.PendingInvite, '#fcffe0')
+StatusColors.set(StatusCode.Available, '#d8ffd8')
+StatusColors.set(StatusCode.Occupied, '#ccaaaa')
+
+
 const TextItem: React.FC<TextItemProps> = ({ children }) => {
     const textStyles: React.CSSProperties = {
         fontFamily: 'Inter',
@@ -28,7 +35,7 @@ const TextItem: React.FC<TextItemProps> = ({ children }) => {
     )
 }
 /* 
-color: #eeeeee for inactive
+color: #dddddd for inactive
 #fcffe0 for pending invite
 #d8ffd8 for available
 #ffe0e0 for occupied
@@ -41,10 +48,12 @@ const FloatingItem: React.FC<FloatingItemProps> = ({ roomName, specialistName, s
         padding: '16px',
         width: '96%',
         margin: 'auto',
-        backgroundColor: '#dddddd',
+        backgroundColor: StatusColors.get(statusCode),
         borderRadius: '12px',
         boxShadow: '2px 2px 6px 1px rgba(0, 0, 0, 0.2)',
-        textAlign: 'center'
+        textAlign: 'center',
+        marginBottom: '12px',
+        transition: '0.3s',
     }
     return (
         <div style={itemStyles}>

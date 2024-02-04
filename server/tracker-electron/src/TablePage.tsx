@@ -2,8 +2,14 @@ import AdStrip from './components/AdStrip';
 import FloatingItem from './components/FloatingItem';
 import PageFooter from './components/PageFooter';
 import { StatusCode } from './common/enums';
+import { useState, useEffect } from 'react';
 
-
+interface TableDataItem {
+    room: string,
+    specialist: string,
+    service: string,
+    status: StatusCode
+}
 
 
 const TablePage = () => {
@@ -32,12 +38,29 @@ const TablePage = () => {
         marginBottom: '12px'
     }
 
-    // const roomNumbers = import.meta.env.VITE_ROOM_NUMBERS;
-    // const specialistNames = import.meta.env.VITE_SPECIALIST_NAMES;
-    // const servicesPerformed = import.meta.env.VITE_SERVICES_PERFORMED;
+    const [tableData, setTableData] = useState<TableDataItem[]>([]);
 
+    useEffect(() => {
+        setTableData([
+            { room: '209 A', specialist: '---', service: '---', status: 0 },
+            { room: '209 Б', specialist: '---', service: '---', status: 0 },
+            { room: '210', specialist: '---', service: '---', status: 0 },
+            { room: '210 А', specialist: '---', service: '---', status: 0 },
+            { room: '211', specialist: '---', service: '---', status: 0 }
+        ])
+        window.electronAPI.onUpdateRooms((value: TableDataItem[]) => { 
+            setTableData(value.map((item) => {
+                const convertedItem: TableDataItem = {
+                    room: item.room,
+                    specialist: item.specialist,
+                    service: item.service,
+                    status: item.status
+                }
+                return convertedItem
+            }))
+        })
+    }, [])
 
-    
     return (
         <div style={mainPageStyles}>
             { /* Table component that will host a couple of FloatingItem (items of the table) */}
@@ -48,13 +71,18 @@ const TablePage = () => {
                     <div>Исследование</div>
                     <div>Статус</div>
                 </div>
-                {/*roomNumbers.split(';')*/}
-                <FloatingItem 
-                    roomName='123'
-                    specialistName='Пантикова И.Н.'
-                    serviceName='ЭКГ ФВД ХМ-ЭКГ СМАД'
-                    statusCode={StatusCode.Available}
-                />
+                
+                {
+                    tableData.map((item) => (
+                        <FloatingItem
+                            key={`${item.room}-${item.specialist}`} // Adjust the key based on your data
+                            roomName={item.room}
+                            specialistName={item.specialist}
+                            serviceName={item.service}
+                            statusCode={item.status}
+                        />
+                    ))
+                }
             </div>
 
             <AdStrip />

@@ -13,7 +13,8 @@ export default defineConfig({
       main: {
         // Shortcut of `build.lib.entry`.
         entry: 'electron/main.ts',
-        envPrefix: 'VITE_'
+        envPrefix: 'VITE_',
+
       },
       preload: {
         // Shortcut of `build.rollupOptions.input`.

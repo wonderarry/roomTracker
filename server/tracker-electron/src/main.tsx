@@ -6,9 +6,7 @@ import TablePage from './TablePage'
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
     <TablePage />
-  </React.StrictMode>,
 )
 
 // Remove Preload scripts loading
