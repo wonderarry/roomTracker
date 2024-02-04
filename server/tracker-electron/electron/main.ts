@@ -147,6 +147,11 @@ function initWebSocketHandlers(mainWindow: BrowserWindow) {
         }
     }
 
+    function sendRoomsToRenderer() {
+        console.log(dataArray.rooms)
+        mainWindow.webContents.send('update-rooms', dataArray.rooms)
+    }
+
     function updateRooms(message: SelectionReceivedData) {
         const data: RoomData = {
             room: getConfigArray('Rooms')[message.roomIndex],
@@ -172,7 +177,7 @@ function initWebSocketHandlers(mainWindow: BrowserWindow) {
                 }
             })
         }
-        mainWindow.webContents.send('update-rooms', dataArray.rooms)
+        sendRoomsToRenderer()
     }
 
     function occupyRoom(ws: WebSocket, message: SelectionReceivedData) {
@@ -216,7 +221,7 @@ function initWebSocketHandlers(mainWindow: BrowserWindow) {
             return undefined
         }
         const resultingIndex = removeWsRoomAttachment()
-        if (resultingIndex !== undefined){
+        if (resultingIndex !== undefined) {
             updateRooms({
                 requestType: 'closeConnection',
                 roomIndex: resultingIndex,
@@ -225,16 +230,16 @@ function initWebSocketHandlers(mainWindow: BrowserWindow) {
                 statusIndex: 0,
             })
         }
-        
-    }
 
+    }
+    mainWindow.webContents.on('did-finish-load', sendRoomsToRenderer)
     wss.on('connection', (ws, req) => {
 
         const heartbeatInterval = setInterval(() => {
             if (ws.readyState === WebSocket.OPEN) {
                 ws.ping()
             }
-        }, 3000)
+        }, Config.get('HeartbeatInterval'))
 
         const clientIP = req.socket.remoteAddress + ':' + req.socket.remotePort
         console.log(clientIP)
@@ -258,7 +263,7 @@ function initWebSocketHandlers(mainWindow: BrowserWindow) {
                 }
             }
             catch (error) {
-                
+
                 console.error("Error parsing incoming message: ", error)
             }
         })

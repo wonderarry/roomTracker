@@ -41,13 +41,13 @@ const TablePage = () => {
     const [tableData, setTableData] = useState<TableDataItem[]>([]);
 
     useEffect(() => {
-        setTableData([
-            { room: '209 A', specialist: '---', service: '---', status: 0 },
-            { room: '209 Б', specialist: '---', service: '---', status: 0 },
-            { room: '210', specialist: '---', service: '---', status: 0 },
-            { room: '210 А', specialist: '---', service: '---', status: 0 },
-            { room: '211', specialist: '---', service: '---', status: 0 }
-        ])
+        // setTableData([
+        //     { room: '209 A', specialist: '---', service: '---', status: 0 },
+        //     { room: '209 Б', specialist: '---', service: '---', status: 0 },
+        //     { room: '210', specialist: '---', service: '---', status: 0 },
+        //     { room: '210 А', specialist: '---', service: '---', status: 0 },
+        //     { room: '211', specialist: '---', service: '---', status: 0 }
+        // ])
         window.electronAPI.onUpdateRooms((value: TableDataItem[]) => { 
             setTableData(value.map((item) => {
                 const convertedItem: TableDataItem = {
@@ -75,7 +75,7 @@ const TablePage = () => {
                 {
                     tableData.map((item) => (
                         <FloatingItem
-                            key={`${item.room}-${item.specialist}`} // Adjust the key based on your data
+                            key={`${item.room}`} // Adjust the key based on your data
                             roomName={item.room}
                             specialistName={item.specialist}
                             serviceName={item.service}
