@@ -11,12 +11,11 @@ const MainPage = () => {
             {/* Main buttons section. 4 buttons -> 2 rows of 2 buttons */}
             <div>
                 <div>
-                    <CustomButton title="1" />
-                    <CustomButton title="2" />
+                    <CustomButton title="myText" defaultColor="#aaaaaa" hoverColor="#888888" pressColor="#333333"/>
+                    <CustomButton title="myText2" defaultColor="#aaaaaa" hoverColor="#888888" pressColor="#333333"/>
                 </div>
                 <div>
-                    <CustomButton title="3" />
-                    <CustomButton title="4" />
+                    
                 </div>
             </div>
             {/* Utility buttons section. 2 buttons, to pin on top and to extend/collapse */}
