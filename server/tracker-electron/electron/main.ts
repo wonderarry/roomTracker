@@ -149,7 +149,7 @@ function initWebSocketHandlers(mainWindow: BrowserWindow) {
     }
 
     function sendRoomsToRenderer() {
-        console.log(dataArray.rooms)
+        
         mainWindow.webContents.send('update-rooms', dataArray.rooms)
     }
 
@@ -263,7 +263,7 @@ function initWebSocketHandlers(mainWindow: BrowserWindow) {
         }, Config.get('HeartbeatInterval'))
 
         const clientIP = req.socket.remoteAddress + ':' + req.socket.remotePort
-        console.log(clientIP)
+        
 
         ws.on('message', async (msg) => {
             try {
