@@ -6,9 +6,10 @@ interface CustomButtonProps {
     defaultColor: string,
     hoverColor: string,
     pressColor: string,
+    onClickHandler: () => void;
 }
 
-const CustomButton: React.FC<CustomButtonProps> = ({title, defaultColor, hoverColor, pressColor}) => {
+const CustomButton: React.FC<CustomButtonProps> = ({title, defaultColor, hoverColor, pressColor, onClickHandler }) => {
 
     
 
@@ -19,19 +20,23 @@ const CustomButton: React.FC<CustomButtonProps> = ({title, defaultColor, hoverCo
     colorMap.set(ButtonColorStates.Pressed, pressColor)
 
     const buttonStyles: React.CSSProperties = {
-        paddingTop: '2rem',
-        paddingBottom: '2rem',
-        paddingLeft: '4rem',
-        paddingRight: '4rem',
+        paddingTop: '1rem',
+        paddingBottom: '1rem',
+        paddingLeft: '2rem',
+        paddingRight: '2rem',
         fontFamily: 'Inter',
         fontSize: '16px',
         fontWeight: '400',
         backgroundColor: defaultColor,
         display: "inline-flex",
         borderRadius: '7px',
-        margin: '0.5rem',
+        margin: '0.25rem',
         userSelect: 'none',
-        transition: '0.4s all'
+        transition: '0.4s all',
+        minWidth: '28dvw',
+        justifyContent:'center',
+        alignItems: 'center',
+        textAlign: 'center'
     }
 
 
@@ -61,6 +66,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({title, defaultColor, hoverCo
             onMouseLeave={() => setMouseEntered(false)}
             onMouseDown={() => setMousePressed(true)}
             onMouseUp={() => setMousePressed(false)}
+            onClick={() => onClickHandler()}
             >
             {title}
         </div>

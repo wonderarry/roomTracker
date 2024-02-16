@@ -14,8 +14,8 @@ interface TextItemProps {
 
 const StatusColors = new Map();
 StatusColors.set(StatusCode.Inactive, '#dddddd')
-StatusColors.set(StatusCode.PendingInvite, '#fcffe0')
-StatusColors.set(StatusCode.Available, '#d8ffd8')
+StatusColors.set(StatusCode.PendingInvite, '#e3e098')
+StatusColors.set(StatusCode.Available, '#ace6ac')
 StatusColors.set(StatusCode.Occupied, '#ccaaaa')
 
 

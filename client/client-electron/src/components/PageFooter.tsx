@@ -5,7 +5,8 @@ const PageFooter = () => {
         fontSize: '12px',
         fontFamily: 'Inter',
         fontWeight: '400',
-        display: 'flex'
+        display: 'flex',
+        padding: '1dvw'
     }
     return (
         <div style={footerStyle}>

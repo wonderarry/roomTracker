@@ -78,6 +78,7 @@ function createWindow() {
             preload: path.join(__dirname, 'preload.js'),
         },
     })
+    mainWindow.setFullScreen(true)
     mainWindow.setMenu(null);
     // Test active push message to Renderer-process.
     mainWindow.webContents.on('did-finish-load', () => {
@@ -181,11 +182,31 @@ function initWebSocketHandlers(mainWindow: BrowserWindow) {
     }
 
     function occupyRoom(ws: WebSocket, message: SelectionReceivedData) {
-        function assignRoomToWs() {
+        
+        function findPreviousRoom() {
+            for (const [roomIndex, wsInstance] of roomIndexToWs.entries()) {
+                if (wsInstance === ws){
+                    return roomIndex
+                }
+            }
+            return -1
+        }
+        function assignRoomToWs(oldIndex: number) {
+            roomIndexToWs.delete(oldIndex)
             roomIndexToWs.set(message.roomIndex, ws)
         }
-        assignRoomToWs()
+        const lastRoom = findPreviousRoom()
+        assignRoomToWs(lastRoom)
         updateRooms(message)
+        if (lastRoom !== -1 && lastRoom !== message.roomIndex){
+            updateRooms({
+                requestType: 'closeConnection',
+                roomIndex: lastRoom,
+                specialistIndex: 0,
+                serviceIndex: 0,
+                statusIndex: 0,
+            })
+        }
 
     }
 

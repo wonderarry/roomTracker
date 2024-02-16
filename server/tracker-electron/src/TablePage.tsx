@@ -65,6 +65,16 @@ const TablePage = () => {
         <div style={mainPageStyles}>
             { /* Table component that will host a couple of FloatingItem (items of the table) */}
             <div style={{ flex: 1 }}>
+                <div
+                    style={{
+                        fontSize: '60px',
+                        fontFamily: 'Inter',
+                        fontWeight: '500',
+                        paddingBottom: '2.5rem',
+                        paddingTop: '1.5rem',
+                        textAlign: 'center'
+                    }}
+                >Отделение ультразвуковой диагностики</div>
                 <div style={headingStyles}>
                     <div>Номер кабинета</div>
                     <div>Имя специалиста</div>

@@ -12,14 +12,14 @@ ws.on('open', () => {
         statusIndex: 3
       };
     
-      ws.send(JSON.stringify(fieldsDataRequest));
+      
 })
 
 ws.on('message', (data) => {
-    console.log(JSON.parse(data))
+    
 })
 
 ws.on('ping', (data) => {
-    console.log('ping data: ', data)
+    
     ws.ping()
 })
