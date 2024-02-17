@@ -1,6 +1,6 @@
 import { app, BrowserWindow } from 'electron'
 import path from 'node:path'
-
+import { ipcMain } from 'electron';
 // The built directory structure
 //
 // ├─┬─┬ dist
@@ -26,11 +26,23 @@ function createWindow() {
         },
     })
     win.setSize(345, 410, true)
-    win.setResizable(false)
-    win.setMenu(null)
+    
+    if (app.isPackaged){
+        win.setMenu(null)
+        win.setResizable(false)
+    }
+    
     // Test active push message to Renderer-process.
     win.webContents.on('did-finish-load', () => {
         win?.webContents.send('main-process-message', (new Date).toLocaleString())
+    })
+
+    win.webContents.on('did-finish-load', () => {
+        const appVersion = app.getVersion()
+        win?.webContents.send('app-version', appVersion);
+    })
+    ipcMain.on('close-app', () => {
+        app.quit();
     })
 
     if (VITE_DEV_SERVER_URL) {
@@ -50,6 +62,7 @@ app.on('window-all-closed', () => {
         win = null
     }
 })
+
 
 app.on('activate', () => {
     // On OS X it's common to re-create a window in the app when the

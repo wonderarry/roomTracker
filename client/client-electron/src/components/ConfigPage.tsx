@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CustomButton from './CustomButton';
-
+import { appVersion } from '../main';
 interface ConnectionConfigProps {
     onConnect: (rooms: string[], specialists: string[], services: string[], socketRef: WebSocket) => void;
 }
@@ -14,12 +14,12 @@ const ConnectionConfig: React.FC<ConnectionConfigProps> = ({ onConnect }) => {
         localStorage.setItem('host', host)
         localStorage.setItem('port', port)
         const url = `ws://${host}:${port}`
-
+        console.log(appVersion)
         const socket = new WebSocket(url);
-
         socket.onopen = () => {
             socket.send(JSON.stringify({
-                requestType: 'fieldsData'
+                requestType: 'fieldsData',
+                version: appVersion
             }));
         }
 
@@ -35,6 +35,9 @@ const ConnectionConfig: React.FC<ConnectionConfigProps> = ({ onConnect }) => {
         }
 
         socket.addEventListener('message', onMessageCall);
+        socket.addEventListener('close', () => {
+            window.ipcRenderer.send('close-app');
+        })
         //TODO: connect to websocket
         //TODO: send request: {requestType: 'fieldsData'}
     }
