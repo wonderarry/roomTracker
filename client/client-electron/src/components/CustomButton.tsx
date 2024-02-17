@@ -22,8 +22,8 @@ const CustomButton: React.FC<CustomButtonProps> = ({title, defaultColor, hoverCo
     const buttonStyles: React.CSSProperties = {
         paddingTop: '1rem',
         paddingBottom: '1rem',
-        paddingLeft: '2rem',
-        paddingRight: '2rem',
+        paddingLeft: '1.3rem',
+        paddingRight: '1.3rem',
         fontFamily: 'Inter',
         fontSize: '16px',
         fontWeight: '400',
