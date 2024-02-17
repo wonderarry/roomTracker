@@ -49,7 +49,7 @@ color: #dddddd for inactive
 const FloatingItem: React.FC<FloatingItemProps> = ({ roomName, specialistName, serviceName, statusCode }) => {
     const itemStyles: React.CSSProperties = {
         display: 'grid',
-        gridTemplateColumns: '12% 34% 34% 20%',
+        gridTemplateColumns: '12% 23% 34% 31%',
         gap: '8px',
         padding: '8px',
         width: '96%',

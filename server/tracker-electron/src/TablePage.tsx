@@ -3,6 +3,7 @@ import FloatingItem from './components/FloatingItem';
 import PageFooter from './components/PageFooter';
 import { StatusCode } from './common/enums';
 import { useState, useEffect } from 'react';
+import OrgLogo from './assets/org_logo.jpg';
 
 interface TableDataItem {
     room: string,
@@ -24,7 +25,7 @@ const TablePage = () => {
 
     const headingStyles: React.CSSProperties = {
         display: 'grid',
-        gridTemplateColumns: '12% 34% 34% 20%',
+        gridTemplateColumns: '12% 23% 34% 31%',
         gap: '8px',
         paddingRight: '2%',
         paddingLeft: '2%',
@@ -68,17 +69,36 @@ const TablePage = () => {
             <div style={{ flex: 1 }}>
                 <div
                     style={{
-                        fontSize: '55px',
+                        display: 'grid',
+                        gridTemplateColumns: '45% 55%',
+                        borderBottom: '1px solid #888888',
+                        overflow: 'hidden',
+                        paddingLeft: '3%',
+                        paddingRight: '3%'
+                    }}
+                >     
+                <img 
+                    style={{
+                        height: '180px',
+                        scale: '1.25',
+                        overflow: 'hidden'
+                    }}
+                    src={OrgLogo}
+                />       
+                <div
+                    style={{
+                        fontSize: '60px',
                         fontFamily: 'Inter',
                         fontWeight: '500',
-                        paddingBottom: '8px',
+                        paddingTop: '8px',
                         textAlign: 'center',
-                        borderBottom: '1px solid #888888'
+                        
                     }}
                 >Отделение функциональной и ультразвуковой диагностики</div>
+                </div>
                 <div style={headingStyles}>
-                    <div>Номер кабинета</div>
-                    <div>Имя специалиста</div>
+                    <div>Кабинет</div>
+                    <div>Имя врача</div>
                     <div>Исследование</div>
                     <div>Статус</div>
                 </div>
