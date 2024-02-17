@@ -1,7 +1,7 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow } from 'electron'
 import path from 'node:path'
 import WebSocket, { WebSocketServer } from 'ws';
-import Config, { get } from 'config';
+import Config from 'config';
 import { RoomData, Rooms } from './interfaces/rooms';
 import { StatusCode } from './interfaces/statusCode';
 // The built directory structure
@@ -23,7 +23,7 @@ const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
 
 
 const wss = new WebSocketServer({
-    port: 5555,
+    port: Config.get('Port'),
 });
 
 
@@ -100,7 +100,7 @@ function initWebSocketHandlers(mainWindow: BrowserWindow) {
         const rooms = getConfigArray('Rooms')
         const specialists = getConfigArray('Specialists')
         const services = getConfigArray('Services')
-
+        console.log(message)
         const responseData = {
             requestType: 'fieldsData',
             rooms: rooms,
@@ -254,7 +254,7 @@ function initWebSocketHandlers(mainWindow: BrowserWindow) {
 
     }
     mainWindow.webContents.on('did-finish-load', sendRoomsToRenderer)
-    wss.on('connection', (ws, req) => {
+    wss.on('connection', (ws) => {
 
         const heartbeatInterval = setInterval(() => {
             if (ws.readyState === WebSocket.OPEN) {
@@ -262,7 +262,7 @@ function initWebSocketHandlers(mainWindow: BrowserWindow) {
             }
         }, Config.get('HeartbeatInterval'))
 
-        const clientIP = req.socket.remoteAddress + ':' + req.socket.remotePort
+        // const clientIP = req.socket.remoteAddress + ':' + req.socket.remotePort
         
 
         ws.on('message', async (msg) => {
@@ -289,7 +289,7 @@ function initWebSocketHandlers(mainWindow: BrowserWindow) {
             }
         })
 
-        ws.on('close', (code, reason) => {
+        ws.on('close', () => {
             clearInterval(heartbeatInterval);
             handleCloseConnection(ws)
         })

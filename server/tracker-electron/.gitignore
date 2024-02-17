@@ -13,6 +13,7 @@ config/
 dist-ssr
 dist-electron
 release
+rel
 *.local
 
 # Editor directories and files

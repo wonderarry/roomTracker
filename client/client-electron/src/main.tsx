@@ -1,6 +1,4 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
 import MainPage from './pages/MainPage.tsx'
 import './index.css'
 

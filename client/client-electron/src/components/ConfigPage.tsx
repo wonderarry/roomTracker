@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import CustomButton from './CustomButton';
 
 interface ConnectionConfigProps {
@@ -11,6 +11,8 @@ const ConnectionConfig: React.FC<ConnectionConfigProps> = ({ onConnect }) => {
     const [port, setPort] = useState('');
 
     const handleConnect = () => {
+        localStorage.setItem('host', host)
+        localStorage.setItem('port', port)
         const url = `ws://${host}:${port}`
 
         const socket = new WebSocket(url);
@@ -46,6 +48,19 @@ const ConnectionConfig: React.FC<ConnectionConfigProps> = ({ onConnect }) => {
         marginRight: '2dvw',
         marginLeft: '2dvw'
     }
+
+    useEffect(() => {
+        const storedHost = localStorage.getItem('host');
+        const storedPort = localStorage.getItem('port');
+
+        if (storedHost !== null) {
+            setHost(storedHost)
+        }
+        if (storedPort !== null) {
+            setPort(storedPort)
+        }
+    }, [])
+
 
     return (
         <div

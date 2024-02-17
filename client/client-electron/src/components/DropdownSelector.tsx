@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState } from 'react';
 
 
 interface DropdownSelectorProps {
@@ -17,8 +17,6 @@ const DropdownSelector: React.FC<DropdownSelectorProps> = ({ onClickHandler, pla
       onClickHandler(newIndex !== null ? newIndex : -1); // Pass -1 if no option is selected
     };
     
-    
-
     return (
       <div>
         <select
