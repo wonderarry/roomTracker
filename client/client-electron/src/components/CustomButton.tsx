@@ -28,12 +28,11 @@ const CustomButton: React.FC<CustomButtonProps> = ({title, defaultColor, hoverCo
         fontSize: '16px',
         fontWeight: '400',
         backgroundColor: defaultColor,
-        display: "inline-flex",
         borderRadius: '7px',
         margin: '0.25rem',
         userSelect: 'none',
         transition: '0.4s all',
-        minWidth: '28dvw',
+        width: '100%',
         justifyContent:'center',
         alignItems: 'center',
         textAlign: 'center'
@@ -68,7 +67,15 @@ const CustomButton: React.FC<CustomButtonProps> = ({title, defaultColor, hoverCo
             onMouseUp={() => setMousePressed(false)}
             onClick={() => onClickHandler()}
             >
-            {title}
+            <a
+                style={{
+                    display: 'flex',
+                    textAlign: 'center',
+                    justifyContent: 'space-around',
+                    alignItems: 'center',
+                    height: '100%'
+                }}
+            >{title}</a>
         </div>
     )
 }

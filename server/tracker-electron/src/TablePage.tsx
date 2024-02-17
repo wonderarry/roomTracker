@@ -12,6 +12,7 @@ interface TableDataItem {
 }
 
 
+
 const TablePage = () => {
     const mainPageStyles: React.CSSProperties = {
         backgroundColor: '#fefefe',
@@ -28,13 +29,13 @@ const TablePage = () => {
         paddingRight: '2%',
         paddingLeft: '2%',
         paddingBottom: '8px',
-        fontSize: '40px',
+        fontSize: '46px',
         fontFamily: 'Inter',
         fontWeight: '600',
         alignItems: 'center',
         textAlign: 'center',
         width: '96%',
-        borderBottom: '3px solid #dadada',
+        borderBottom: '1px solid #888888',
         marginBottom: '12px'
     }
 
@@ -67,14 +68,14 @@ const TablePage = () => {
             <div style={{ flex: 1 }}>
                 <div
                     style={{
-                        fontSize: '60px',
+                        fontSize: '55px',
                         fontFamily: 'Inter',
                         fontWeight: '500',
-                        paddingBottom: '2.5rem',
-                        paddingTop: '1.5rem',
-                        textAlign: 'center'
+                        paddingBottom: '8px',
+                        textAlign: 'center',
+                        borderBottom: '1px solid #888888'
                     }}
-                >Отделение ультразвуковой диагностики</div>
+                >Отделение функциональной и ультразвуковой диагностики</div>
                 <div style={headingStyles}>
                     <div>Номер кабинета</div>
                     <div>Имя специалиста</div>
@@ -83,15 +84,17 @@ const TablePage = () => {
                 </div>
                 
                 {
-                    tableData.map((item) => (
-                        <FloatingItem
-                            key={`${item.room}`} // Adjust the key based on your data
+                    tableData.map((item) => {
+                        if (item.status !== 0) {
+                            return <FloatingItem
+                            key={`${item.room}`} 
                             roomName={item.room}
                             specialistName={item.specialist}
                             serviceName={item.service}
                             statusCode={item.status}
                         />
-                    ))
+                        }
+                    })
                 }
             </div>
 

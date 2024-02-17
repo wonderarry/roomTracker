@@ -13,3 +13,9 @@ postMessage({ payload: 'removeLoading' }, '*')
 window.ipcRenderer.on('main-process-message', (_event, message) => {
   console.log(message)
 })
+
+export var appVersion: string|null = null;
+window.ipcRenderer.on('app-version', (_event, version) => {
+    appVersion = version;
+})
+

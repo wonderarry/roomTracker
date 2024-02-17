@@ -33,6 +33,7 @@ interface BaseRequestData {
 }
 
 interface FieldsReceivedData extends BaseRequestData {
+    version: string,
 }
 
 interface SelectionReceivedData extends BaseRequestData {
@@ -84,7 +85,7 @@ function createWindow() {
     mainWindow.webContents.on('did-finish-load', () => {
         mainWindow?.webContents.send('main-process-message', (new Date).toLocaleString())
     })
-
+    
     if (VITE_DEV_SERVER_URL) {
         mainWindow.loadURL(VITE_DEV_SERVER_URL)
     } else {
@@ -97,6 +98,12 @@ function createWindow() {
 
 function initWebSocketHandlers(mainWindow: BrowserWindow) {
     function handleFieldsData(ws: WebSocket, message: FieldsReceivedData) {
+
+        const {version} = message
+        if (version != app.getVersion()){
+            ws.close()
+        }
+
         const rooms = getConfigArray('Rooms')
         const specialists = getConfigArray('Specialists')
         const services = getConfigArray('Services')
@@ -160,7 +167,6 @@ function initWebSocketHandlers(mainWindow: BrowserWindow) {
             service: getConfigArray('Services')[message.serviceIndex],
             status: message.statusIndex
         }
-        console.log('inside updateRooms, data: ', data)
         dataArray = {
             rooms: dataArray.rooms.map((item) => {
 

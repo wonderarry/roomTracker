@@ -10,7 +10,8 @@ const PageFooter = () => {
         width: '100%',
         fontFamily: "Inter",
         fontWeight: '400',
-        fontSize: "12px"
+        fontSize: "12px",
+        marginTop: '-10px',
     }
     const locale = 'ru';
     const [today, setDate] = React.useState(new Date());

@@ -18,13 +18,19 @@ StatusColors.set(StatusCode.PendingInvite, '#e3e098')
 StatusColors.set(StatusCode.Available, '#ace6ac')
 StatusColors.set(StatusCode.Occupied, '#ccaaaa')
 
+const CodeToStatus = new Map();
+CodeToStatus.set(0, 'Нет приема');
+CodeToStatus.set(1, 'Ожидайте приглашения');
+CodeToStatus.set(2, 'Свободно');
+CodeToStatus.set(3, 'Занято');
+
 
 const TextItem: React.FC<TextItemProps> = ({ children }) => {
     const textStyles: React.CSSProperties = {
         fontFamily: 'Inter',
-        fontSize: '25px',
+        fontSize: '40px',
         fontWeight: '500',
-        color: '#222222'
+        color: '#222222',
     }
     return (
         <div
@@ -45,7 +51,7 @@ const FloatingItem: React.FC<FloatingItemProps> = ({ roomName, specialistName, s
         display: 'grid',
         gridTemplateColumns: '12% 34% 34% 20%',
         gap: '8px',
-        padding: '16px',
+        padding: '8px',
         width: '96%',
         margin: 'auto',
         backgroundColor: StatusColors.get(statusCode),
@@ -54,13 +60,14 @@ const FloatingItem: React.FC<FloatingItemProps> = ({ roomName, specialistName, s
         textAlign: 'center',
         marginBottom: '12px',
         transition: '0.3s',
+        alignItems: 'center'
     }
     return (
         <div style={itemStyles}>
             <TextItem>{roomName}</TextItem>
             <TextItem>{specialistName}</TextItem>
             <TextItem>{serviceName}</TextItem>
-            <TextItem>{statusCode}</TextItem>
+            <TextItem>{CodeToStatus.get(statusCode)}</TextItem>
         </div>
     )
 }
