@@ -329,7 +329,7 @@ function initWebSocketHandlers(mainWindow: BrowserWindow) {
 
         const language: string = 'ru';
 
-        const tempDir = path.join(__dirname, 'temp');
+        const tempDir = path.join('C:\\', 'temp');
         if (!existsSync(tempDir)) {
             mkdirSync(tempDir);
         }
