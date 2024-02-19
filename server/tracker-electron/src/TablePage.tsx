@@ -13,7 +13,6 @@ interface TableDataItem {
 }
 
 
-
 const TablePage = () => {
     const mainPageStyles: React.CSSProperties = {
         backgroundColor: '#fefefe',
@@ -41,6 +40,7 @@ const TablePage = () => {
     }
 
     const [tableData, setTableData] = useState<TableDataItem[]>([]);
+    
 
     useEffect(() => {
         // setTableData([

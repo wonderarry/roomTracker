@@ -4,6 +4,10 @@ import WebSocket, { WebSocketServer } from 'ws';
 import Config from 'config';
 import { RoomData, Rooms } from './interfaces/rooms';
 import { StatusCode } from './interfaces/statusCode';
+import { existsSync, mkdirSync, createWriteStream } from 'fs';
+import fetch from 'electron-fetch';
+import escapeStringRegexp from 'escape-string-regexp';
+import {spawn } from 'child_process';
 // The built directory structure
 //
 // ├─┬─┬ dist
@@ -49,8 +53,6 @@ function getConfigArray(tag: string): string[] {
 }
 
 
-
-
 function fillRooms(): Rooms {
     const possibleRooms = getConfigArray('Rooms')
     const specialists = getConfigArray('Specialists')
@@ -85,7 +87,7 @@ function createWindow() {
     mainWindow.webContents.on('did-finish-load', () => {
         mainWindow?.webContents.send('main-process-message', (new Date).toLocaleString())
     })
-    
+
     if (VITE_DEV_SERVER_URL) {
         mainWindow.loadURL(VITE_DEV_SERVER_URL)
     } else {
@@ -99,8 +101,8 @@ function createWindow() {
 function initWebSocketHandlers(mainWindow: BrowserWindow) {
     function handleFieldsData(ws: WebSocket, message: FieldsReceivedData) {
 
-        const {version} = message
-        if (version != app.getVersion()){
+        const { version } = message
+        if (version != app.getVersion()) {
             ws.close()
         }
 
@@ -156,7 +158,7 @@ function initWebSocketHandlers(mainWindow: BrowserWindow) {
     }
 
     function sendRoomsToRenderer() {
-        
+
         mainWindow.webContents.send('update-rooms', dataArray.rooms)
     }
 
@@ -188,10 +190,10 @@ function initWebSocketHandlers(mainWindow: BrowserWindow) {
     }
 
     function occupyRoom(ws: WebSocket, message: SelectionReceivedData) {
-        
+
         function findPreviousRoom() {
             for (const [roomIndex, wsInstance] of roomIndexToWs.entries()) {
-                if (wsInstance === ws){
+                if (wsInstance === ws) {
                     return roomIndex
                 }
             }
@@ -204,7 +206,7 @@ function initWebSocketHandlers(mainWindow: BrowserWindow) {
         const lastRoom = findPreviousRoom()
         assignRoomToWs(lastRoom)
         updateRooms(message)
-        if (lastRoom !== -1 && lastRoom !== message.roomIndex){
+        if (lastRoom !== -1 && lastRoom !== message.roomIndex) {
             updateRooms({
                 requestType: 'closeConnection',
                 roomIndex: lastRoom,
@@ -216,17 +218,148 @@ function initWebSocketHandlers(mainWindow: BrowserWindow) {
 
     }
 
+    function tokenize(text: string) {
+        if (text === "") throw new Error("No text to speak");
+
+        const punc = "¡!()[]¿?.,;:—«»\n";
+        const puncList = punc.split("").map(function (char) {
+            return escapeStringRegexp(char);
+        });
+
+        const pattern = puncList.join("|");
+        let parts = text.split(new RegExp(pattern));
+        parts = parts.filter((p) => p.length > 0);
+
+        let output = [];
+        output = parts;
+
+        return output;
+    }
+
+    function getHeader() {
+        return {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Windows; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.114 Safari/537.36"
+        };
+    }
+    function getArgsFactory(lang: string) {
+        return (text: string, index: number, total: number) => {
+            const textlen = text.length;
+            const encodedText = encodeURIComponent(text);
+            const language = lang || "en";
+            return `?ie=UTF-8&tl=${language}&q=${encodedText}&total=${total}&idx=${index}&client=tw-ob&textlen=${textlen}`;
+        };
+    }
+
+    async function saveVoice(filepath: string, text: string, lang = "en") {
+        const textParts = tokenize(text);
+        const total = textParts.length;
+
+        for (const part of textParts) {
+            const index = textParts.indexOf(part);
+            const headers = getHeader();
+            const args = getArgsFactory(lang)(part, index, total);
+            const fullUrl = "http://translate.google.com/translate_tts" + args;
+
+            const writeStream = createWriteStream(filepath, {
+                flags: index > 0 ? "a" : "w",
+            });
+            fetch(fullUrl, { headers }).then((resp) => {
+                const body: NodeJS.ReadableStream = resp.body as NodeJS.ReadableStream;
+                body.pipe(writeStream);
+            })
+            await new Promise((resolve) => writeStream.on("finish", resolve));
+        }
+    }
+
+    function playAudio(what: string, options: {}, next: Function) {
+        // const players = [
+        //     'mplayer',
+        //     'afplay',
+        //     'mpg123',
+        //     'mpg321',
+        //     'play',
+        //     'omxplayer',
+        //     'aplay',
+        //     'cmdmp3',
+        //     'cvlc',
+        //     'powershell'
+        // ];
+
+
+        next = next || function () {};
+        next = typeof options === 'function' ? options : next;
+        options = typeof options === 'object' ? options : {};
+      
+        // const urlRegex = /^(https?|ftp):\/\/[^\s\/$.?#].[^\s]*$/i;
+        // const player = options.player || findExec(players);
+        const player = 'powershell';
+        // const isURL = player === 'mplayer' && urlRegex.test(what);
+      
+        const args =  [what];
+        const process = spawn(player, args, options);
+      
+        if (!process) {
+          next(new Error("Unable to spawn process with " + player));
+          return null;
+        }
+      
+        process.on('close', function (err) {
+          next(err ? err : null);
+        });
+      
+        return process;
+      }
+      
+
+    function voiceover(roomInd: number, status: number) {
+        const room = getConfigArray('Rooms')[roomInd];
+        let statusText = '';
+        if (status === 2) {
+            statusText = 'Кабинет [] свободен, проходите пожалуйста';
+        } else if (status === 1) {
+            statusText = 'Ожидайте приглашения в кабинет []';
+        }
+
+        const voiceoverText = statusText.replace('[]', room);
+        console.log(voiceoverText);
+
+        if (voiceoverText === '') {
+            return;
+        }
+
+        const language: string = 'ru';
+
+        const tempDir = path.join(__dirname, 'temp');
+        if (!existsSync(tempDir)) {
+            mkdirSync(tempDir);
+        }
+
+        const timestamp = new Date().getTime();
+        const tempFilePath = path.join(tempDir, `${timestamp}.mp3`);
+        saveVoice(tempFilePath, voiceoverText, language).then(
+            () => {
+                console.log('!')
+                playAudio(tempFilePath, {}, () => {});
+                // playAudioFile(tempFilePath).then(() => {
+                //     unlink(tempFilePath, () => {});
+                // })
+            }
+        )
+
+
+    }
 
     async function handleSelectionData(ws: WebSocket, message: SelectionReceivedData) {
         if (!validateSelectionDataInput(message)) {
-            // handle bad response
+            // TODO: handle bad response
             return
         }
 
         if (!isRoomVacant(ws, message)) {
-            // handle occupied room
+            // TODO: handle occupied room
             return
         }
+        voiceover(message.roomIndex, message.statusIndex)
         occupyRoom(ws, message)
 
         const responseData = {
@@ -269,7 +402,7 @@ function initWebSocketHandlers(mainWindow: BrowserWindow) {
         }, Config.get('HeartbeatInterval'))
 
         // const clientIP = req.socket.remoteAddress + ':' + req.socket.remotePort
-        
+
 
         ws.on('message', async (msg) => {
             try {
@@ -319,5 +452,4 @@ app.on('activate', () => {
         createWindow()
     }
 })
-
 app.whenReady().then(createWindow)
