@@ -27,10 +27,12 @@ function createWindow() {
     })
     win.setSize(345, 410, true)
     
-    if (app.isPackaged){
-        win.setMenu(null)
-        win.setResizable(false)
-    }
+    //dev only - uncomment later
+
+    // if (app.isPackaged){
+    //     win.setMenu(null)
+    //     win.setResizable(false)
+    // }
     
     // Test active push message to Renderer-process.
     win.webContents.on('did-finish-load', () => {
@@ -42,7 +44,10 @@ function createWindow() {
         win?.webContents.send('app-version', appVersion);
     })
     ipcMain.on('close-app', () => {
-        app.quit();
+
+        // dev only
+        console.log('Attepmted to close the app due to close-app call')
+        // app.quit();
     })
 
     if (VITE_DEV_SERVER_URL) {

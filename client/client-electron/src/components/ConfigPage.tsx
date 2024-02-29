@@ -26,6 +26,7 @@ const ConnectionConfig: React.FC<ConnectionConfigProps> = ({ onConnect }) => {
         const onMessageCall = (event: MessageEvent) => {
             socket.removeEventListener('message', onMessageCall)
             const message = JSON.parse(event.data);
+            console.log('received data from server: ', message)
             if (message.requestType === 'fieldsData') {
                 const { rooms, specialists, services } = message;
                 onConnect(rooms, specialists, services, socket);
@@ -35,7 +36,8 @@ const ConnectionConfig: React.FC<ConnectionConfigProps> = ({ onConnect }) => {
         }
 
         socket.addEventListener('message', onMessageCall);
-        socket.addEventListener('close', () => {
+        socket.addEventListener('close', (ev: CloseEvent) => {
+            console.log(ev)
             window.ipcRenderer.send('close-app');
         })
         //TODO: connect to websocket
